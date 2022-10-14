@@ -1,31 +1,34 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-try {
-    const context = github.context
+async function run() {
 
-    const environment = core.getInput('environment')
-    const token = core.getInput('token')
-    const owner = context.repo.owner
-    const repo = context.repo.repo
+    try {
+        const context = github.context
 
-    const octokit = github.getOctokit(token)
+        const environment = core.getInput('environment')
+        const token = core.getInput('token')
+        const owner = context.repo.owner
+        const repo = context.repo.repo
 
-    const dep = await octokit.rest.repos.listDeployments({
-        owner,
-        repo,
-        environment
-    })
+        const octokit = github.getOctokit(token)
 
-    console.log(JSON.stringify(dep))
+        const {data} = await octokit.rest.repos.listDeployments({
+            owner,
+            repo,
+            environment
+        })
 
-    if (dep.size > 0) {
-        core.setOutput("last", dep[0].sha);
+        if (data.length > 0) {
+            core.setOutput("last", data[0].sha);
+        }
+        if (data.length > 1) {
+            core.setOutput("prev", data[1].sha);
+        }
+
+    } catch (error) {
+        core.setFailed(error.message);
     }
-    if (dep.size > 1) {
-        core.setOutput("prev", dep[1].sha);
-    }
-
-} catch (error) {
-    core.setFailed(error.message);
 }
+
+run()
