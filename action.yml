@@ -24,5 +24,7 @@ runs:
         echo "last=$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_OUTPUT
         echo "prev=$(date "+%y%m")-$GITHUB_RUN_NUMBER" >> $GITHUB_OUTPUT
       shell: bash
+    - run: deno run --allow-all hello.ts
+      shell: bash
     - run: goodbye.sh
       shell: bash
