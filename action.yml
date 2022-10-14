@@ -1,0 +1,17 @@
+name: 'Deployment status fetcher'
+description: 'Return deployment data for last two deloyments'
+inputs:
+  token:
+    required: true
+    type: string
+  environment:
+    required: true
+    type: string
+outputs:
+  last: # id of output
+    description: 'sha or last deploy'
+  prev: # id of output
+    description: 'sha or previous deploy'
+runs:
+  using: 'node16'
+  main: 'index.js'
