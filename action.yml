@@ -13,5 +13,16 @@ outputs:
   prev: # id of output
     description: 'sha or previous deploy'
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: "composite"
+  steps:
+    - uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
+    - run: echo Hello direct.
+      shell: bash
+    - run: |
+        echo "last=$(echo ${{ github.sha }} | cut -c1-8)" >> $GITHUB_OUTPUT
+        echo "prev=$(date "+%y%m")-$GITHUB_RUN_NUMBER" >> $GITHUB_OUTPUT
+      shell: bash
+    - run: goodbye.sh
+      shell: bash
